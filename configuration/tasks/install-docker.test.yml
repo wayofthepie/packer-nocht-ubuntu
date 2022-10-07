@@ -1,0 +1,7 @@
+---
+- name: should have docker installed
+  ansible.builtin.shell: docker --version
+  register: output
+
+- ansible.builtin.debug:
+    msg: "{{ output.stdout }}"

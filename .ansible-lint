@@ -1,0 +1,8 @@
+---
+exclude_paths:
+  - configuration/test.yml
+  - configuration/tasks/*.test.yml
+skip_list:
+  - name[casing]
+
+

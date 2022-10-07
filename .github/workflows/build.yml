@@ -1,0 +1,13 @@
+---
+name: build ami
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/wayofthepie/packer-build:main
+    steps:
+      - name: check versions of tools
+        run: packer --version && ansible --version
