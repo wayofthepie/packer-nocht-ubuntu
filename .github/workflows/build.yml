@@ -9,6 +9,7 @@ jobs:
     container:
       image: ghcr.io/wayofthepie/packer-build:main
     steps:
+      - uses: actions/checkout@v3
       - name: provision image
         run: |
           packer build .
