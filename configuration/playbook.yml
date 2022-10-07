@@ -4,7 +4,6 @@
   become: true
   tasks:
     - ansible.builtin.import_tasks: tasks/install-docker.yml
-    - ansible.builtin.import_tasks: tasks/install-docker.test.yml
-
     - ansible.builtin.import_tasks: tasks/install-tailscale.yml
-    - ansible.builtin.import_tasks: tasks/install-tailscale.test.yml
+    - ansible.builtin.import_tasks: tasks/install-vault.yml
+    - ansible.builtin.import_tasks: tasks/test.yml
