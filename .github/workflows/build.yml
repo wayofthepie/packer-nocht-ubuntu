@@ -18,7 +18,7 @@ jobs:
           set -e
           branch=${GITHUB_REF##*/}
           skip_publish=$([ "${branch}" == "main" ] && echo "false" || echo "true")
-          echo "Publishing on branch ${branch}? ${skip_publish}"
+          echo "Skip publishing on branch ${branch}? ${skip_publish}"
           packer init .
           packer build -var "skip_publish=${skip_publish}" .
         env:
