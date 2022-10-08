@@ -11,7 +11,7 @@
     dest: /etc/apt/sources.list.d/tailscale.list
     mode: 0644
 
-- name: add tailscale repo
+- name: install tailscale
   ansible.builtin.apt:
     name: tailscale
     update_cache: true

@@ -1,6 +1,13 @@
 ---
-- name: should have vault installed
-  ansible.builtin.shell: vault --version
+- name: should have docker installed
+  ansible.builtin.shell: docker --version
+  register: output
+
+- ansible.builtin.debug:
+    msg: "{{ output.stdout }}"
+
+- name: should have vault docker image cached
+  ansible.builtin.shell: docker images | grep vault
   register: output
 
 - ansible.builtin.debug:
@@ -8,13 +15,6 @@
 
 - name: should have tailscale installed
   ansible.builtin.shell: tailscale --version
-  register: output
-
-- ansible.builtin.debug:
-    msg: "{{ output.stdout }}"
-
-- name: should have docker installed
-  ansible.builtin.shell: docker --version
   register: output
 
 - ansible.builtin.debug:

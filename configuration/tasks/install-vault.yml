@@ -1,22 +1,7 @@
 ---
-- name: add vault key
-  ansible.builtin.get_url:
-    url: https://apt.releases.hashicorp.com/gpg
-    dest: /usr/share/keyrings/hashicorp-archive-keyring.gpg
-    mode: 0644
-
-- name: add vault repo
-  ansible.builtin.apt_repository:
-    repo: >-
-      deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg]
-      https://apt.releases.hashicorp.com $(lsb_release -cs)
-      main
+- name: pull vault docker image
+  community.docker.docker_image:
+    name: vault
+    tag: 1.11.4
+    source: pull
     state: present
-    filename: vault
-
-- name: install vault
-  ansible.builtin.apt:
-    name:
-      - vault
-    state: present
-    update_cache: true

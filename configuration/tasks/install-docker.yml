@@ -20,7 +20,7 @@
     state: present
     filename: docker
 
-- name: install Docker
+- name: install docker
   ansible.builtin.apt:
     name:
       - docker-ce
