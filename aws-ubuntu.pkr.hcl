@@ -20,11 +20,6 @@ build {
   sources = [
     "source.amazon-ebs.ubuntu"
   ]
-  provisioner "shell" {
-    inline = [
-      "echo test"
-    ]
-  }
   provisioner "ansible" {
     user                   = "ubuntu"
     playbook_file          = "configuration/playbook.yml"
