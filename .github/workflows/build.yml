@@ -5,20 +5,7 @@ on:
     branches: [main]
 jobs:
   build:
-    if: github.ref != "refs/heads/main"
     uses: ./.github/workflows/build_workflow.yml
-    with:
-      concurrency_group: ${{ github.sha }}
-      skip_publish: true
-    secrets:
-      aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  build_and_publish:
-    if: github.ref == "refs/heads/main"
-    uses: ./.github/workflows/build_workflow.yml
-    with:
-      concurrency_group: ${{ github.ref }}
-      skip_publish: false
     secrets:
       aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

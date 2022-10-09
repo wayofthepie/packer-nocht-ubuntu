@@ -3,13 +3,6 @@ name: Build
 
 on:
   workflow_call:
-    inputs:
-      concurrency_group:
-        required: true
-        type: string
-      skip_publish:
-        required: true
-        type: string
     secrets:
       aws_access_key_id:
         required: true
@@ -17,9 +10,33 @@ on:
         required: true
 
 jobs:
+  initialize:
+    runs-on: ubuntu-latest
+    outputs:
+      concurrency_group: ${{ steps.concurrency_group.outputs.value }}
+      skip_publish: ${{ steps.skip_publish.outputs.value }}
+    steps:
+      - id: concurrency_group
+        shell: bash
+        run: |
+          branch=${GITHUB_REF##*/}
+          if [ "${branch}" == main ]; then
+            echo "::set-output name=value::sequential"
+          else
+            echo "::set-output name=value::${{ github.sha }}"
+          fi
+      - id: skip_publish
+        shell: bash
+        run: |
+          branch=${GITHUB_REF##*/}
+          if [ "${branch}" == main ]; then
+            echo "::set-output name=value::false"
+          else
+            echo "::set-output name=value::true"
+          fi
   build:
     concurrency:
-      group: ${{ concurrency_group }}
+      group: ${{ needs.initialize.outputs.concurrency_group }}
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/wayofthepie/packer-build:latest
@@ -30,11 +47,9 @@ jobs:
         run: |
           set -e
           branch=${GITHUB_REF##*/}
-          skip_publish=$([ "${branch}" == "main" ] && echo "false" || echo "true")
-          skip_publish=true
           echo "Skip publishing on branch ${branch}? ${skip_publish}"
           packer init .
-          packer build -var "skip_publish=${skip_publish}" .
+          packer build -var "skip_publish=${{ needs.initialize.outputs.skip_publish }}" .
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key_id }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
