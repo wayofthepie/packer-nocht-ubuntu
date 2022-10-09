@@ -52,7 +52,7 @@ jobs:
           branch=${GITHUB_REF##*/}
           echo "Skip publishing on branch ${branch}? ${skip_publish}"
           packer init .
-          packer build -var "skip_publish=${skip_publish}" aws/ami
+          packer build -var "skip_publish=${skip_publish}" aws/ami/nocht-ubuntu-base
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key_id }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
