@@ -40,6 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/wayofthepie/packer-build:latest
+    needs: initialize
     steps:
       - uses: actions/checkout@v3
       - name: provision image
