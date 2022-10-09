@@ -5,23 +5,20 @@ on:
     branches: [main]
 jobs:
   build:
-    concurrency:
-      group: ${{ github.ref }}
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/wayofthepie/packer-build:latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: provision image
-        shell: bash
-        run: |
-          set -e
-          branch=${GITHUB_REF##*/}
-          skip_publish=$([ "${branch}" == "main" ] && echo "false" || echo "true")
-          skip_publish=true
-          echo "Skip publishing on branch ${branch}? ${skip_publish}"
-          packer init .
-          packer build -var "skip_publish=${skip_publish}" .
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    if: github.ref != "refs/heads/main"
+    uses: ./.github/workflows/build_workflow.yml
+    with:
+      concurrency_group: ${{ github.sha }}
+      skip_publish: true
+    secrets:
+      aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  build_and_publish:
+    if: github.ref == "refs/heads/main"
+    uses: ./.github/workflows/build_workflow.yml
+    with:
+      concurrency_group: ${{ github.ref }}
+      skip_publish: false
+    secrets:
+      aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

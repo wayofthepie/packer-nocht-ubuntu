@@ -1,0 +1,40 @@
+---
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      concurrency_group:
+        required: true
+        type: string
+      skip_publish:
+        required: true
+        type: string
+    secrets:
+      aws_access_key_id:
+        required: true
+      aws_secret_access_key:
+        required: true
+
+jobs:
+  build:
+    concurrency:
+      group: ${{ concurrency_group }}
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/wayofthepie/packer-build:latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: provision image
+        shell: bash
+        run: |
+          set -e
+          branch=${GITHUB_REF##*/}
+          skip_publish=$([ "${branch}" == "main" ] && echo "false" || echo "true")
+          skip_publish=true
+          echo "Skip publishing on branch ${branch}? ${skip_publish}"
+          packer init .
+          packer build -var "skip_publish=${skip_publish}" .
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key_id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
