@@ -1,10 +1,16 @@
 ---
-name: build ami
-on: push
+name: build nocht-ubuntu-base ami
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "aws/ami/nocht-ubuntu-base/*"
 
 jobs:
   build:
     uses: ./.github/workflows/build_workflow.yml
+    with:
+      ami_folder_path: aws/ami/nocht-ubuntu-base
     secrets:
       aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
