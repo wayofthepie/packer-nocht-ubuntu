@@ -1,7 +1,0 @@
----
-- name: pull vault docker image
-  community.docker.docker_image:
-    name: vault
-    tag: 1.11.4
-    source: pull
-    state: present
