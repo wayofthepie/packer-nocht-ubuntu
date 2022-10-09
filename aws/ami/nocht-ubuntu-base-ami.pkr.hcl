@@ -1,5 +1,5 @@
 source "amazon-ebs" "ubuntu" {
-  ami_name      = "nocht-ubuntu"
+  ami_name      = "nocht-ubuntu-base"
   instance_type = "t3.micro"
   region        = "eu-west-1"
   source_ami_filter {
@@ -16,7 +16,7 @@ source "amazon-ebs" "ubuntu" {
 }
 
 build {
-  name = "nocht-ubuntu"
+  name = "nocht-ubuntu-base"
   sources = [
     "source.amazon-ebs.ubuntu"
   ]
