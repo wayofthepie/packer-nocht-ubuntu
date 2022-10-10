@@ -54,8 +54,14 @@ jobs:
           skip_publish=${{ needs.initialize.outputs.skip_publish }}
           branch=${GITHUB_REF##*/}
           echo "Skip publishing on branch ${branch}? ${skip_publish}"
+          export VAULT_TOKEN=$(curl -s --header "X-Vault-Namespace: $VAULT_NAMESPACE" \
+            --request POST --data '{"role_id": "${{ secrets.VAULT_ROLE_ID }}", \
+            "secret_id": "${{ secrets.VAULT_SECRET_ID }}"}' \
+            $VAULT_ADDR/v1/auth/approle/login | jq -r '.auth.client_token' )
           packer init .
           packer build -var "skip_publish=${skip_publish}" ${{ inputs.ami_folder_path }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key_id }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
+          VAULT_ADDR: "https://nocht-vault-public-vault-9c9bdcd2.0758a91f.z1.hashicorp.cloud:8200"
+          VAULT_NAMESPACE: "admin"
