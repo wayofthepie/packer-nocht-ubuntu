@@ -12,7 +12,8 @@ source "amazon-ebs" "ubuntu" {
     most_recent = true
     owners      = ["099720109477"]
   }
-
+  force_deregister = true
+  force_delete_snapshot = true
   ssh_username    = "ubuntu"
   skip_create_ami = "${var.skip_publish}"
 }
