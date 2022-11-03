@@ -1,0 +1,7 @@
+---
+- name: should have tailscale installed
+  ansible.builtin.shell: tailscale --version
+  register: output
+
+- ansible.builtin.debug:
+    msg: "{{ output.stdout }}"
