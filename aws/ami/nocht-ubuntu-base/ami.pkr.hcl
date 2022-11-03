@@ -3,6 +3,8 @@ source "amazon-ebs" "ubuntu" {
   instance_type = "t3.micro"
   region        = "eu-west-1"
 
+  force_deregister = true
+  force_delete_snapshot = true
   source_ami_filter {
     filters = {
       name                = "ubuntu/images/*ubuntu-*-22.04-amd64-server-*"
@@ -18,14 +20,14 @@ source "amazon-ebs" "ubuntu" {
 }
 
 build {
-  name = "nocht-ubuntu-base"
+  name = "{{ uuidv4 }}"
   sources = [
     "source.amazon-ebs.ubuntu"
   ]
 
   provisioner "ansible" {
     user                   = "ubuntu"
-    playbook_file          = "configuration/playbook.yml"
+    playbook_file          = "${path.root}/configuration/playbook.yml"
     extra_arguments        = [
       "--extra-vars", "callback_whitelist=profile_tasks",
     ]
