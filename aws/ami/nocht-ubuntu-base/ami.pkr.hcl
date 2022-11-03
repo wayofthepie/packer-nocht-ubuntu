@@ -27,7 +27,7 @@ build {
 
   provisioner "ansible" {
     user                   = "ubuntu"
-    playbook_file          = "${path.root}/configuration/playbook.yml"
+    playbook_file          = "${abspath(path.root)}/configuration/playbook.yml"
     extra_arguments        = [
       "--extra-vars", "callback_whitelist=profile_tasks",
     ]
